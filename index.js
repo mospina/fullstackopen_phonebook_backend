@@ -43,8 +43,26 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-  const body = request.body
-  const person = {...body, id: generateId()}
+  const {name, number} = request.body
+  
+  if (!name || !number) {
+    return response.status(400).json({
+      error: 'name and number are required'
+    })  
+  }
+
+  if (persons.find(p => p.name === name)) {
+    return response.status(400).json({
+      error: 'name must be unique'
+    })  
+  }
+
+  const person = {
+    name,
+    number,
+    id: generateId()
+  }
+
   persons = [...persons, person]
     
   response.json(person)
