@@ -100,7 +100,7 @@ app.delete('/api/persons/:id', (request, response) => {
 
 const generateId = () => Math.floor(Math.random() * Math.floor(1000000));
 
-const PORT = 3009
+const PORT = process.env.PORT || 3009
 app.listen(PORT, () =>
   console.log(`Server running on port ${PORT}`)
 )  
