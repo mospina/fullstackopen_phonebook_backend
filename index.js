@@ -67,6 +67,23 @@ app.get('/api/persons/:id', (request, response, next) => {
   )
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const id = request.params.id
+  const {name, number} = request.body
+  
+  if (!name || !number) {
+    return response.status(400).json({
+      error: 'name and number are required'
+    })  
+  }
+
+  Person.findByIdAndUpdate(id, {name, number}, {new: true}).then(
+    person => response.json(person)
+  ).catch(
+    error => next(error)
+  )
+})
+
 app.delete('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
 
