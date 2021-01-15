@@ -1,6 +1,6 @@
 {
   "name": "phonebook_backend",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Phonebook exercises from fullstackopen",
   "main": "index.js",
   "scripts": {
