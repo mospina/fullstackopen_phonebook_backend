@@ -38,10 +38,7 @@ app.get('/api/persons', (request, response) => {
 app.post('/api/persons', (request, response, next) => {
   const {name, number} = request.body
   
-  const person = new Person({
-    name, 
-    number: number.replace(/\s/g, '')
-  })
+  const person = new Person({name, number})
 
   person.save().then(
     savedPerson => response.json(savedPerson)
@@ -70,10 +67,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     })  
   }
   
-  const changes = {
-    name,
-    number: number.replace(/\s/g, '')
-  }
+  const changes = {name, number}
 
   const options = {
     new: true,
