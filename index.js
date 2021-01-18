@@ -38,7 +38,10 @@ app.get('/api/persons', (request, response) => {
 app.post('/api/persons', (request, response, next) => {
   const {name, number} = request.body
   
-  const person = new Person({name, number})
+  const person = new Person({
+    name, 
+    number: number.replace(/\s/g, '')
+  })
 
   person.save().then(
     savedPerson => response.json(savedPerson)
@@ -66,8 +69,19 @@ app.put('/api/persons/:id', (request, response, next) => {
       error: 'name and number are required'
     })  
   }
+  
+  const changes = {
+    name,
+    number: number.replace(/\s/g, '')
+  }
 
-  Person.findByIdAndUpdate(id, {name, number}, {new: true}).then(
+  const options = {
+    new: true,
+    runValidators: true,
+    context: 'query'
+  }
+
+  Person.findByIdAndUpdate(id, changes, options).then(
     person => response.json(person)
   ).catch(
     error => next(error)
