@@ -60,13 +60,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.put('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
   const {name, number} = request.body
-  
-  if (!name || !number) {
-    return response.status(400).json({
-      error: 'name and number are required'
-    })  
-  }
-  
+ 
   const changes = {name, number}
 
   const options = {
@@ -76,7 +70,15 @@ app.put('/api/persons/:id', (request, response, next) => {
   }
 
   Person.findByIdAndUpdate(id, changes, options).then(
-    person => response.json(person)
+    person => { 
+      if (!person) {
+        const error = new Error('Not found')
+        error.name = 'CastError'  
+        throw error
+      }
+
+      return response.json(person)
+    }
   ).catch(
     error => next(error)
   )
@@ -96,9 +98,9 @@ const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({error: 'malformatted id'})
+    return response.status(400).json({name: 'CastError', error: 'malformatted id'})
   } else if (error.name === 'ValidationError') {
-    return response.status(400).json({error: error.message})
+    return response.status(400).json({name: 'ValidationError', error: error.message})
   }
   
   next(error)
